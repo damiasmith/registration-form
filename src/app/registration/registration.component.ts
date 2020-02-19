@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
+// import custom validator to validate that password and confirm password fields match
+import { MustMatch } from '../must-match.validator';
 
 @Component({
   selector: 'app-registration',
@@ -12,7 +15,9 @@ export class RegistrationComponent implements OnInit {
   registerForm: FormGroup;
     submitted = false;
 
-  constructor(private formBuilder: FormBuilder ) { }
+    constructor(
+      private formBuilder: FormBuilder,
+      private router: Router) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -23,8 +28,12 @@ export class RegistrationComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       acceptTerms: [false, Validators.requiredTrue]
+    }, {
+      validator: MustMatch('password', 'confirmPassword')
     });
   }
+
+  get f() { return this.registerForm.controls; }
 
   onSubmit() {
     this.submitted = true;
@@ -36,6 +45,7 @@ export class RegistrationComponent implements OnInit {
 
     // display form values on success
     alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.registerForm.value, null, 4));
+    this.router.navigateByUrl('confirmation');
   }
 
   onReset() {
