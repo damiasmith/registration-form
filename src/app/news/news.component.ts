@@ -17,7 +17,7 @@ export class NewsComponent implements OnInit {
 
       console.log(data);
 
-      this.articles = data["articles"];
+      this.articles = data['articles'];
 
     });
   }
